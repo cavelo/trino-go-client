@@ -92,9 +92,11 @@ func Serial(v interface{}) (string, error) {
 	case []byte:
 		return "", UnsupportedArgError{"[]byte"}
 
-		// time.Time and time.Duration not supported as time and date take several different formats in Trino
 	case time.Time:
-		return "", UnsupportedArgError{"time.Time"}
+		//https://trino.io/docs/current/language/types.html?highlight=timestamp%203#timestamp-with-time-zone
+		return fmt.Sprintf("TIMESTAMP '%s'", x.Format("2006-01-02 15:04:05.999 MST")), nil
+
+		// time.Time and time.Duration not supported as time and date take several different formats in Trino
 	case time.Duration:
 		return "", UnsupportedArgError{"time.Duration"}
 
